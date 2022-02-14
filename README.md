@@ -98,5 +98,26 @@ Os resultados obtidos foram:<br>
 <img src="cartoon.png" alt="cartoon" style="width:35%"/><br>
 </pre>
 </p>
+</pre>
+</p>
+<h3>3. - Desenho </h3>
+Código Utilizado:<br>
+<pre class="prettyprint">
+<code>
+import cv2
+import numpy as np
+img = cv2.imread("morro.png")
+##função que utilizamos para dividir o cinza pelo inverso da suavizada
+def dodgeV2(x,y): 
+	return cv2.divide(x, 255-y, scale=256)
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)##Obter a imagem em tons de cinza
+img_invert = cv2.bitwise_not(img_gray) ##Obter o inverso do cinza
+img_smoothing = cv2.GaussianBlur(img_invert,(21,21),cv2.BORDER_DEFAULT) ##Obter o borrado do invertido
+desenho = dodgeV2(img_gray,img_smoothing)
+</code>
+Os resultados obtidos foram:<br>
+<img src="desenho.png" alt="desenho" style="width:35%"/><br>
+</pre>
+</p>
 </body>
 </html>
