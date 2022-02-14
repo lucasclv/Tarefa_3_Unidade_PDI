@@ -78,7 +78,7 @@ cv2.destroyAllWindows()
 Os resultados obtidos foram:<br>
 <img src="vermelho.png" alt="vermelho" style="width:35%"/><br>
 <img src="azul.png" alt="azul" style="width:35%"/><br>
-<img src="vermelho.png" alt="verde" style="width:35%"/><br>
+<img src="verde.png" alt="verde" style="width:35%"/><br>
 </pre>
 </p>
 
