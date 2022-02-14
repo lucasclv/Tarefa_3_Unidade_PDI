@@ -81,7 +81,21 @@ Os resultados obtidos foram:<br>
 <img src="verde.png" alt="verde" style="width:35%"/><br>
 </pre>
 </p>
-
+<h3>2. - Cartoon </h3>
+Código Utilizado:<br>
+<pre class="prettyprint">
+<code>
+import cv2
+import numpy as np
+img = cv2.imread("morro.png")
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)##Obter a imagem em tons de cinza
+img_gray_blur = cv2.medianBlur(img_gray, 5)##Obter o cinza suavizado
+edges = cv2.adaptiveThreshold(img_gray_blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)##obter as bordas do cinza suavizado
+color = cv2.bilateralFilter(img, 9, 250, 250)##Tiramos o ruido sem atrapalhar as bordas
+cartoon = cv2.bitwise_and(color, color, mask=edges)
+</code>
+Os resultados obtidos foram:<br>
+<img src="cartoon.png" alt="cartoon" style="width:35%"/><br>
 </pre>
 </p>
 </body>
