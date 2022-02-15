@@ -119,5 +119,102 @@ Os resultados obtidos foram:<br>
 <img src="desenho.png" alt="desenho" style="width:35%"/><br>
 </pre>
 </p>
+</pre>
+</p>
+<h3>4. - Codigo Completo </h3>
+Código Utilizado:<br>
+<pre class="prettyprint">
+<code>
+import cv2
+import numpy as np
+img = cv2.imread("morro.png")
+
+##função que utilizamos para dividir o cinza pelo inverso da suavizada
+def dodgeV2(x,y): 
+	return cv2.divide(x, 255-y, scale=256) 
+
+
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)##Obter a imagem em tons de cinza
+img_invert = cv2.bitwise_not(img_gray) ##Obter o inverso do cinza
+img_smoothing = cv2.GaussianBlur(img_invert,(21,21),cv2.BORDER_DEFAULT) ##Obter o borrado do invertido
+img_gray_blur = cv2.medianBlur(img_gray, 5)##obter o cinza suavizado
+edges = cv2.adaptiveThreshold(img_gray_blur, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)##obter as bordas do cinza suavizado
+
+hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV) ##Para conseguirmos isolar uma faixa de cor precisamos mudar de BGR para HSV para facilitar a operação
+
+##Criamos as faixas de cor que utilizariamos na marcara, indicando o limite inferior e o superior da faixa de cor.
+lower_blue = np.array([85, 0, 0]) 
+upper_blue = np.array([150, 255, 255])
+
+##Criamos as faixas de cor que utilizariamos na marcara, indicando o limite inferior e o superior da faixa de cor.
+lower_red = np.array([160,00,0])
+upper_red = np.array([200,255,255])
+
+##Criamos as faixas de cor que utilizariamos na marcara, indicando o limite inferior e o superior da faixa de cor.
+lower_green = np.array([30,0,0])
+upper_green = np.array([85,255,255])
+
+##Fazemos a mascara para ter apenas a cor que queremos e a mascara invertida para conseguirmos ter o background em preto e branco.
+mask_red = cv2.inRange(hsv, lower_red, upper_red)
+mask_red_inv = cv2.bitwise_not(mask_red)
+
+##Aqui é onde obtemos o nosso resultado
+res_red = cv2.bitwise_and(img, img, mask = mask_red)
+background_red = cv2.bitwise_and(img_gray, img_gray, mask = mask_red_inv)
+background_red = np.stack((background_red,)*3, axis=-1)
+red = cv2.add(res_red, background_red)
+cv2.imshow('mask', mask_red)
+cv2.imshow('result', res_red)
+cv2.imshow('red', red)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+##Fazemos a mascara para ter apenas a cor que queremos e a mascara invertida para conseguirmos ter o background em preto e branco.
+mask_blue = cv2.inRange(hsv, lower_blue, upper_blue)
+mask_blue_inv = cv2.bitwise_not(mask_blue)
+
+##Aqui é onde obtemos o nosso resultado
+res_blue = cv2.bitwise_and(img, img, mask = mask_blue)
+background_blue = cv2.bitwise_and(img_gray, img_gray, mask = mask_blue_inv)
+background_blue = np.stack((background_blue,)*3, axis=-1)
+blue = cv2.add(res_blue, background_blue)
+cv2.imshow('mask', mask_blue)
+cv2.imshow('result', res_blue)
+cv2.imshow('blue', blue)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+##Fazemos a mascara para ter apenas a cor que queremos e a mascara invertida para conseguirmos ter o background em preto e branco.
+mask_green = cv2.inRange(hsv, lower_green, upper_green)
+mask_green_inv = cv2.bitwise_not(mask_green)
+
+##Aqui é onde obtemos o nosso resultado
+res_green = cv2.bitwise_and(img, img, mask = mask_green)
+background_green = cv2.bitwise_and(img_gray, img_gray, mask = mask_green_inv)
+background_green = np.stack((background_green,)*3, axis=-1)
+green = cv2.add(res_green, background_green)
+cv2.imshow('mask', mask_green)
+cv2.imshow('result', res_green)
+cv2.imshow('verde', green)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+color = cv2.bilateralFilter(img, 9, 250, 250)##Tiramos o ruido sem atrapalhar as bordas
+cartoon = cv2.bitwise_and(color, color, mask=edges)
+desenho = dodgeV2(img_gray,img_smoothing);
+
+cv2.waitKey(0)
+cv2.imshow("Desenho",desenho)
+cv2.imwrite("desenho.png", desenho)
+cv2.imshow("Cartoon",cartoon)
+cv2.imwrite("cartoon.png", cartoon)
+cv2.imwrite("vermelho.png", red)
+cv2.imwrite("verde.png", green)
+cv2.imwrite("azul.png", blue)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+</code>
+</pre>
+</p>
 </body>
 </html>
